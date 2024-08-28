@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Box, Button, Flex, Link } from "@chakra-ui/react";
 
 export default function Navigation() {
@@ -10,10 +9,16 @@ export default function Navigation() {
             <h1 style={{ paddingLeft: "22px", fontSize: "18px" }}>Kitt&apos;s blog</h1>
           </Link>
           <Box ml="auto" pt="16px" pb="16px" pr="22px">
-            <Button colorScheme="teal" variant="ghost" mr="16px">
+            <Button variant="ghost" mr="16px">
               Sign in
             </Button>
-            <Button colorScheme="teal" variant="solid">
+            <Button
+              border="2px solid #32a852"
+              _hover={{ backgroundColor: "transparent", borderColor: "#56bf73" }}
+              _active={{ backgroundColor: "transparent", borderColor: "#7ecc94" }}
+              backgroundColor="transparent"
+              variant="solid"
+            >
               Sign up
             </Button>
           </Box>

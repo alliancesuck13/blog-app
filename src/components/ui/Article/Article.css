@@ -1,0 +1,262 @@
+/* Стили внутри .Box */
+.Box a:link {
+  text-decoration: underline;
+  cursor: auto;
+}
+
+.Box a:visited {
+  text-decoration: underline;
+  cursor: auto;
+}
+
+.Box a:link:active,
+.Box a:visited:active {
+  color: inherit; /* Используйте цвет по умолчанию, можно заменить на конкретное значение */
+}
+
+.Box address {
+  display: block;
+  font-style: italic;
+}
+
+.Box area,
+.Box base,
+.Box datalist,
+.Box link,
+.Box meta,
+.Box param,
+.Box script,
+.Box style,
+.Box template,
+.Box title,
+.Box track {
+  display: none;
+}
+
+.Box article,
+.Box aside,
+.Box div,
+.Box footer,
+.Box header,
+.Box main,
+.Box nav,
+.Box section {
+  display: block;
+}
+
+.Box b {
+  font-weight: bold;
+}
+
+.Box bdo {
+  unicode-bidi: bidi-override;
+}
+
+.Box cite,
+.Box dfn,
+.Box em,
+.Box i,
+.Box var {
+  font-style: italic;
+}
+
+.Box code,
+.Box kbd,
+.Box pre,
+.Box samp {
+  font-family: monospace;
+}
+
+.Box ol,
+.Box ul {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 40px;
+}
+
+.Box li {
+  display: list-item;
+}
+
+.Box table {
+  display: table;
+  border-collapse: separate;
+  border-spacing: 2px;
+  border-color: gray;
+}
+
+.Box tbody,
+.Box tfoot,
+.Box thead {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+.Box tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+.Box td,
+.Box th {
+  display: table-cell;
+  vertical-align: inherit;
+  border-color: inherit;
+  text-align: center;
+  font-weight: bold;
+}
+
+.Box caption {
+  display: table-caption;
+  text-align: center;
+}
+
+.Box col {
+  display: table-column;
+}
+
+.Box colgroup {
+  display: table-column-group;
+}
+
+.Box fieldset {
+  display: block;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 0.35em 0.75em 0.625em 0.75em;
+  border: 2px groove;
+}
+
+.Box legend {
+  display: block;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: none;
+}
+
+.Box label {
+  cursor: default;
+}
+
+.Box h1,
+.Box h2,
+.Box h3,
+.Box h4,
+.Box h5,
+.Box h6 {
+  display: block;
+  font-weight: bold;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.Box h1 {
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+}
+
+.Box h2 {
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+}
+
+.Box h3 {
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.Box h4 {
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+}
+
+.Box h5 {
+  font-size: 0.83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+}
+
+.Box h6 {
+  font-size: 0.67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+}
+
+.Box blockquote {
+  display: block;
+  margin: 1em 40px;
+}
+
+.Box p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.Box body {
+  display: block;
+  margin: 8px;
+}
+
+.Box html:focus,
+.Box body:focus,
+.Box embed:focus,
+.Box iframe:focus,
+.Box object:focus {
+  outline: none;
+}
+
+.Box hr {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+}
+
+.Box figure {
+  display: block;
+  margin: 1em 40px;
+}
+
+.Box figcaption {
+  display: block;
+}
+
+.Box ins {
+  text-decoration: underline;
+}
+
+.Box del,
+.Box s,
+.Box strike {
+  text-decoration: line-through;
+}
+
+.Box sup,
+.Box sub {
+  font-size: smaller;
+}
+
+.Box sub {
+  vertical-align: sub;
+}
+
+.Box sup {
+  vertical-align: super;
+}
+
+.Box mark {
+  background-color: yellow;
+  color: black;
+}
