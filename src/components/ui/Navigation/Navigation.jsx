@@ -1,26 +1,30 @@
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
+import { Box, Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
 
-export default function Navigation() {
+export default function Navigation({ children }) {
+  const [lessThan570] = useMediaQuery("(max-width: 570px)");
+
   return (
     <Box backgroundColor="#fff">
       <header>
         <Flex align="center" alignContent="center">
           <Link>
-            <h1 style={{ paddingLeft: "22px", fontSize: "18px" }}>Kitt&apos;s blog</h1>
+            {lessThan570 ? (
+              <Image
+                src="/logo.svg"
+                alt="Kitt's blog"
+                minWidth="48px"
+                minHeight="48px"
+                maxW="48px"
+                maxH="48px"
+              />
+            ) : (
+              <h1 style={{ paddingLeft: "22px", fontSize: "18px", fontWeight: "bold" }}>
+                KITT&apos;S BLOG
+              </h1>
+            )}
           </Link>
           <Box ml="auto" pt="16px" pb="16px" pr="22px">
-            <Button variant="ghost" mr="16px">
-              Sign in
-            </Button>
-            <Button
-              border="2px solid #32a852"
-              _hover={{ backgroundColor: "transparent", borderColor: "#56bf73" }}
-              _active={{ backgroundColor: "transparent", borderColor: "#7ecc94" }}
-              backgroundColor="transparent"
-              variant="solid"
-            >
-              Sign up
-            </Button>
+            {children}
           </Box>
         </Flex>
       </header>

@@ -1,5 +1,7 @@
-import { Avatar, Box, useMediaQuery, Flex, Image, Tag } from "@chakra-ui/react";
+import { Avatar, Box, useMediaQuery, Flex, Tag } from "@chakra-ui/react";
 import { format } from "date-fns";
+
+import "./ArticleMinimized.css";
 
 export default function ArticleMinimized() {
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
@@ -61,11 +63,12 @@ export default function ArticleMinimized() {
             nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
         </Box>
-        <button type="button" style={{ position: "absolute", bottom: "15px", right: 0 }}>
-          <Flex transform="translate(-10px, 7px)">
-            <Image padding="0" src="/unliked.svg" alt="" boxSize="20px" mr="2px" />
-            <span style={{ fontSize: "12px" }}>12</span>
-          </Flex>
+        <button
+          type="button"
+          className="button"
+          style={{ position: "absolute", bottom: "15px", right: "16px" }}
+        >
+          <span style={{ fontSize: "12px" }}>12</span>
         </button>
       </Box>
     </article>

@@ -1,12 +1,30 @@
-import { Avatar, Box, Flex, Tag, useMediaQuery } from "@chakra-ui/react";
+import Markdown from "markdown-to-jsx";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+  Tag,
+  useDisclosure,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { format } from "date-fns";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Markdown from "markdown-to-jsx";
+import "./OwnArticle.css";
 
-import "./Article.css";
-
-export default function Article() {
+export default function OwnArticle() {
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
+  const [lessThan496] = useMediaQuery("(max-width: 496px)");
+  const { isOpen, onToggle, onClose } = useDisclosure();
   const avatar = isLargerThan888 ? <Avatar name="Anonymouse User" src="" /> : null;
 
   return (
@@ -311,6 +329,47 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
         >
           <span style={{ fontSize: "12px" }}>12</span>
         </button>
+        <Flex position="absolute" top="110px" right="16px">
+          <Popover
+            returnFocusOnClose={false}
+            isOpen={isOpen}
+            onClose={onClose}
+            placement="right"
+            closeOnBlur={false}
+          >
+            {lessThan496 ? (
+              <Button onClick={onToggle} colorScheme="red" type="button" mr="5px">
+                Delete
+              </Button>
+            ) : (
+              <PopoverTrigger>
+                <Button onClick={onToggle} colorScheme="red" type="button" mr="5px">
+                  Delete
+                </Button>
+              </PopoverTrigger>
+            )}
+            <PopoverContent
+              position={lessThan496 ? "absolute" : ""}
+              top={lessThan496 ? "120px" : 0}
+            >
+              <PopoverHeader fontWeight="semibold">Confirmation</PopoverHeader>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverBody>Are you sure you want to delete your article?</PopoverBody>
+              <PopoverFooter display="flex" justifyContent="flex-end">
+                <ButtonGroup size="sm">
+                  <Button variant="outline" onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="red">Apply</Button>
+                </ButtonGroup>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
+          <Button colorScheme="green" type="button">
+            Edit
+          </Button>
+        </Flex>
       </Box>
     </article>
   );
