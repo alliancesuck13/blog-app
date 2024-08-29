@@ -2,10 +2,32 @@ import { Avatar, Box, useMediaQuery, Flex, Tag } from "@chakra-ui/react";
 import { format } from "date-fns";
 
 import "./ArticleMinimized.css";
+import generateUniqueID from "../../../utils/generateUniqueID";
 
-export default function ArticleMinimized() {
+export default function ArticleMinimized({
+  title,
+  description,
+  createdAt,
+  tagList,
+  favoritesCount,
+  author,
+}) {
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
-  const avatar = isLargerThan888 ? <Avatar name="Anonymouse User" src="" /> : null;
+  const avatar = isLargerThan888 ? (
+    <Avatar name={author.username} src={author.image} />
+  ) : null;
+  const tags = tagList.map((tag) => (
+    <Tag
+      key={generateUniqueID()}
+      mr="5px"
+      mb="5px"
+      backgroundColor="transparent"
+      border="1px solid black"
+      borderRadius="3px"
+    >
+      {tag}
+    </Tag>
+  ));
 
   return (
     <article>
@@ -30,17 +52,16 @@ export default function ArticleMinimized() {
               maxWidth: "655px",
             }}
           >
-            Article title about title and about titleout title and about titleout title
-            and about title
+            {title}
           </h2>
           <Box minWidth="141px" ml="auto">
             <Flex>
               <Flex flexDirection="column" mr="12px">
                 <p style={{ fontSize: "18px", fontWeight: "bold", whiteSpace: "nowrap" }}>
-                  Anonymouse User
+                  {author.username}
                 </p>
                 <p style={{ fontSize: "12px", color: "#00000080", textAlign: "end" }}>
-                  {format(new Date().toISOString(), "PP")}
+                  {format(new Date(createdAt), "PP")}
                 </p>
               </Flex>
               {avatar}
@@ -48,27 +69,15 @@ export default function ArticleMinimized() {
           </Box>
         </Flex>
         <Box maxW="700px">
-          <Tag
-            mr="5px"
-            mb="5px"
-            backgroundColor="transparent"
-            border="1px solid black"
-            borderRadius="3px"
-          >
-            tag1
-          </Tag>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
+          {tags}
+          <p>{description}</p>
         </Box>
         <button
           type="button"
           className="button"
           style={{ position: "absolute", bottom: "15px", right: "16px" }}
         >
-          <span style={{ fontSize: "12px" }}>12</span>
+          <span style={{ fontSize: "12px" }}>{favoritesCount}</span>
         </button>
       </Box>
     </article>

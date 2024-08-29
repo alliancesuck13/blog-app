@@ -10,13 +10,13 @@ import App from "./app";
 import store from "./store";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ChakraProvider theme={theme} resetCSS>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ChakraProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <ChakraProvider theme={theme} resetCSS>
+      <BrowserRouter>
+        {/* <React.StrictMode> */}
+        <App />
+        {/* </React.StrictMode> */}
+      </BrowserRouter>
+    </ChakraProvider>
+  </Provider>
 );

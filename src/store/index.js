@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { configureStore } from "@reduxjs/toolkit";
 
-import exampleReducer from "./slicers/exampleSlice";
+import articlesReducer from "./slicers/articlesSlice";
 
 export default configureStore({
-  reducer: { example: exampleReducer },
+  reducer: { articles: articlesReducer },
 });
