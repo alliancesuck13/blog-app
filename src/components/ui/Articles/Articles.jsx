@@ -5,7 +5,6 @@ import {
   AlertIcon,
   AlertTitle,
   Flex,
-  Skeleton,
   Spinner,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -84,23 +83,23 @@ export default function Articles() {
         </Alert>
       ) : null}
       {isLoaded ? (
-        articlesMinimized
+        <>
+          {articlesMinimized}
+          <Pagination
+            current={currentPage}
+            pageSize={20}
+            total={totalPages * 20 - 20}
+            align="center"
+            showSizeChanger={false}
+            style={{ marginBottom: "16px" }}
+            onChange={onChangePage}
+          />
+        </>
       ) : (
         <Flex>
           <Spinner size="xl" ml="auto" mr="auto" mt="25px" mb="25px" />
         </Flex>
       )}
-      <Skeleton isLoaded={isLoaded}>
-        <Pagination
-          current={currentPage}
-          pageSize={20}
-          total={totalPages * 20}
-          align="center"
-          showSizeChanger={false}
-          style={{ marginBottom: "16px" }}
-          onChange={onChangePage}
-        />
-      </Skeleton>
     </>
   );
 }

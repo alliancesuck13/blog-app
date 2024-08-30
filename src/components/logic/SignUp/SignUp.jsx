@@ -25,12 +25,18 @@ export default function SignUp() {
                  box-shadow: 0px 9.19px 44.28px 0px #0000000D;
                  box-shadow: 0px 22px 106px 0px #00000012"
     >
-      <FormControl isRequired mb="8px">
+      <FormControl mb="8px">
         <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "48px" }}>
           Create new account
         </h2>
         <FormLabel htmlFor="username">Username</FormLabel>
-        <Input id="username" mb="21px" type="text" isRequired placeholder="john1snow" />
+        <Input
+          id="username"
+          mb="21px"
+          type="text"
+          isRequired
+          placeholder="must befrom 3 to 20 symbols"
+        />
         <FormLabel htmlFor="email">Email address</FormLabel>
         <Input
           id="email"
@@ -45,7 +51,7 @@ export default function SignUp() {
           mb="21px"
           type="password"
           isRequired
-          placeholder="Extr4chaD1"
+          placeholder="must be from 6 to 40 symbols"
         />
         <FormLabel htmlFor="passwordRepeat">Repeat Password</FormLabel>
         <Input
@@ -53,9 +59,9 @@ export default function SignUp() {
           mb="21px"
           type="password"
           isRequired
-          placeholder="Extr4chaD1"
+          placeholder="passwords must match"
         />
-        <Checkbox mb="21px" fontSize="12px" textAlign="start" defaultChecked>
+        <Checkbox mb="21px" fontSize="12px" textAlign="start">
           I agree to the processing of my personal information
         </Checkbox>
         <Button

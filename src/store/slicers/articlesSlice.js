@@ -17,8 +17,6 @@ const articlesSlice = createSlice({
 
     changePage(state, action) {
       state.articles = action.payload.newArticles;
-      console.log("store ->", state.articles);
-      console.log("actual articles ->", action.payload.newArticles);
     },
   },
 });
