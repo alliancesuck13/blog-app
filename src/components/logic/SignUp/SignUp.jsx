@@ -1,4 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Checkbox,
@@ -7,77 +11,215 @@ import {
   Input,
   Link,
 } from "@chakra-ui/react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+
+import SignUpService from "./services/SignUpService";
 
 export default function SignUp() {
+  const { register, handleSubmit, formState, watch } = useForm({
+    mode: "onChange",
+  });
+
+  const [isUsernameOrEmailTaken, setIsUsernameOrEmailTaken] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const service = new SignUpService();
+  const usernameError = formState.errors.username?.message;
+  const emailError = formState.errors.email?.message;
+  const passwordError = formState.errors.password?.message;
+  const passwordRepeatError = formState.errors.passwordRepeat?.message;
+  const checkbox = formState.errors.checkbox?.message;
+
+  const password = watch("password");
+
+  const onSubmit = (data) => {
+    setIsLoading(true);
+    const body = {
+      user: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      },
+    };
+
+    service
+      .signUp(body)
+      .then((response) => {
+        if (response.message === "422") {
+          setIsUsernameOrEmailTaken(true);
+          setIsSuccess(false);
+          setIsLoading(false);
+          return null;
+        }
+
+        setIsUsernameOrEmailTaken(false);
+        setIsSuccess(true);
+        setIsLoading(false);
+
+        setTimeout(() => setIsSuccess(false), 4000);
+
+        return response;
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setIsError(true);
+      });
+  };
+
   return (
-    <Box
-      ml="auto"
-      mr="auto"
-      transform="translateY(2%)"
-      p="48px 32px"
-      maxW="384px"
-      backgroundColor="#fff"
-      textAlign="center"
-      borderRadius="6px"
-      boxShadow="box-shadow: 0px 1.46px 7.05px 0px #00000007;
+    <>
+      {isSuccess || isError ? (
+        <Alert status={"success" || "error"} transform="translateY(-15px)">
+          <AlertIcon />
+          <AlertDescription>
+            {"Good news! You are signed up!" ||
+              "Something did wrong. Try to reload the page"}
+          </AlertDescription>
+          {window.scrollTo({ top: 0, behavior: "smooth" })}
+        </Alert>
+      ) : null}
+      <Box
+        ml="auto"
+        mr="auto"
+        transform="translateY(2%)"
+        p="48px 32px"
+        maxW="384px"
+        backgroundColor="#fff"
+        textAlign="center"
+        borderRadius="6px"
+        boxShadow="box-shadow: 0px 1.46px 7.05px 0px #00000007;
                  box-shadow: 0px 2.75px 13.27px 0px #00000009;
                  box-shadow: 0px 4.91px 23.68px 0px #0000000B;
                  box-shadow: 0px 9.19px 44.28px 0px #0000000D;
                  box-shadow: 0px 22px 106px 0px #00000012"
-    >
-      <FormControl mb="8px">
+      >
         <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "48px" }}>
           Create new account
         </h2>
-        <FormLabel htmlFor="username">Username</FormLabel>
-        <Input
-          id="username"
-          mb="21px"
-          type="text"
-          isRequired
-          placeholder="must befrom 3 to 20 symbols"
-        />
-        <FormLabel htmlFor="email">Email address</FormLabel>
-        <Input
-          id="email"
-          mb="21px"
-          type="email"
-          isRequired
-          placeholder="johnsnow@yummi.com"
-        />
-        <FormLabel htmlFor="password">Password</FormLabel>
-        <Input
-          id="password"
-          mb="21px"
-          type="password"
-          isRequired
-          placeholder="must be from 6 to 40 symbols"
-        />
-        <FormLabel htmlFor="passwordRepeat">Repeat Password</FormLabel>
-        <Input
-          id="passwordRepeat"
-          mb="21px"
-          type="password"
-          isRequired
-          placeholder="passwords must match"
-        />
-        <Checkbox mb="21px" fontSize="12px" textAlign="start">
-          I agree to the processing of my personal information
-        </Checkbox>
-        <Button
-          color="#fff"
-          backgroundColor="#1890FF"
-          _hover={{ backgroundColor: "#56a8f5" }}
-          _active={{ backgroundColor: "#95c7f5" }}
-          width="100%"
-          type="submit"
-        >
-          Create
-        </Button>
-      </FormControl>
-      <p>
-        Already have an account? <Link color="#56a8f5">Sign In</Link>
-      </p>
-    </Box>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl mb="8px">
+            <FormLabel htmlFor="username">Username</FormLabel>
+            <Input
+              id="username"
+              mb="21px"
+              type="text"
+              placeholder="must befrom 3 to 20 symbols"
+              {...register("username", {
+                required: "This field is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9]{3,20}$/,
+                  message: "Username must be valid",
+                },
+              })}
+            />
+            {usernameError || isUsernameOrEmailTaken ? (
+              <Alert status="error" transform="translateY(-15px)">
+                <AlertIcon />
+                <AlertDescription>
+                  {usernameError || "Username or email already are taken"}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            <FormLabel htmlFor="email">Email address</FormLabel>
+            <Input
+              id="email"
+              mb="21px"
+              type="email"
+              placeholder="johnsnow@yummi.com"
+              {...register("email", {
+                required: "This field is required",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "Email must be valid",
+                },
+              })}
+            />
+            {emailError || isUsernameOrEmailTaken ? (
+              <Alert status="error" transform="translateY(-15px)">
+                <AlertIcon />
+                <AlertDescription>
+                  {emailError || "Username or email already are taken"}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <Input
+              id="password"
+              mb="21px"
+              type="password"
+              placeholder="must be from 6 to 40 symbols"
+              {...register("password", {
+                required: "This field is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "Password must be no more than 40 characters long",
+                },
+              })}
+            />
+            {passwordError ? (
+              <Alert status="error" transform="translateY(-15px)">
+                <AlertIcon />
+                <AlertDescription>{passwordError}</AlertDescription>
+              </Alert>
+            ) : null}
+            <FormLabel htmlFor="passwordRepeat">Repeat Password</FormLabel>
+            <Input
+              id="passwordRepeat"
+              mb="21px"
+              type="password"
+              placeholder="passwords must match"
+              {...register("passwordRepeat", {
+                required: "This field is required",
+                validate: (value) => value === password || "The passwords doesn't match",
+              })}
+            />
+            {passwordRepeatError ? (
+              <Alert status="error" transform="translateY(-15px)">
+                <AlertIcon />
+                <AlertDescription>{passwordRepeatError}</AlertDescription>
+              </Alert>
+            ) : null}
+            <Checkbox
+              mb="21px"
+              fontSize="12px"
+              textAlign="start"
+              {...register("checkbox", {
+                required: "You should be an agree",
+              })}
+            >
+              I agree to the processing of my personal information
+            </Checkbox>
+            {checkbox ? (
+              <Alert status="error" transform="translateY(-15px)">
+                <AlertIcon />
+                <AlertDescription>{checkbox}</AlertDescription>
+              </Alert>
+            ) : null}
+            <Button
+              color="#fff"
+              backgroundColor="#1890FF"
+              _hover={{ backgroundColor: "#56a8f5" }}
+              _active={{ backgroundColor: "#95c7f5" }}
+              width="100%"
+              type="submit"
+              isLoading={isLoading}
+            >
+              Create
+            </Button>
+          </FormControl>
+        </form>
+        <p>
+          Already have an account? <Link color="#56a8f5">Sign In</Link>
+        </p>
+      </Box>
+    </>
   );
 }

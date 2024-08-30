@@ -1,7 +1,17 @@
 import { Avatar, Button, Flex, Link, useMediaQuery } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { signOut } from "../../../store/slicers/userSlice";
 
 export default function NavLogged() {
   const [lessThan500] = useMediaQuery("(max-width: 500px)");
+  const username = useSelector((state) => {
+    return state.user.username;
+  });
+  const userImage = useSelector((state) => {
+    return state.user.image;
+  });
+  const dispatch = useDispatch();
 
   return (
     <Flex alignItems="center">
@@ -19,13 +29,19 @@ export default function NavLogged() {
                 marginRight: "5px",
               }}
             >
-              Anonymouse User
+              {username}
             </span>
           )}
-          <Avatar name="Anonymouse User" src="" />
+          <Avatar name={username} src={userImage} />
         </Flex>
       </Link>
-      <Button type="button" colorScheme="gray" variant="solid" ml="10px">
+      <Button
+        type="button"
+        colorScheme="gray"
+        variant="solid"
+        ml="10px"
+        onClick={() => dispatch(signOut())}
+      >
         Log Out
       </Button>
     </Flex>
