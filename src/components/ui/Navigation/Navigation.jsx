@@ -4,7 +4,14 @@ export default function Navigation({ children }) {
   const [lessThan570] = useMediaQuery("(max-width: 570px)");
 
   return (
-    <Box backgroundColor="#fff">
+    <Box
+      backgroundColor="#fff"
+      position="fixed"
+      zIndex={1}
+      top={0}
+      minW="100%"
+      borderBottom="1px solid #000"
+    >
       <header>
         <Flex align="center" alignContent="center">
           <Link>

@@ -4,6 +4,7 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Box,
   Flex,
   Spinner,
 } from "@chakra-ui/react";
@@ -72,7 +73,7 @@ export default function Articles() {
   };
 
   return (
-    <>
+    <Box mt={20}>
       {didWrong ? (
         <Alert status="error">
           <AlertIcon />
@@ -100,6 +101,6 @@ export default function Articles() {
           <Spinner size="xl" ml="auto" mr="auto" mt="25px" mb="25px" />
         </Flex>
       )}
-    </>
+    </Box>
   );
 }
