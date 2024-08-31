@@ -14,10 +14,12 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 import SignUpService from "./services/SignUpService";
 
 export default function SignUp() {
+  document.title = "Sign Up";
   const { register, handleSubmit, formState, watch } = useForm({
     mode: "onChange",
   });
@@ -85,7 +87,7 @@ export default function SignUp() {
       <Box
         ml="auto"
         mr="auto"
-        transform="translateY(2%)"
+        transform="translateY(12%)"
         p="48px 32px"
         maxW="384px"
         backgroundColor="#fff"
@@ -217,7 +219,10 @@ export default function SignUp() {
           </FormControl>
         </form>
         <p>
-          Already have an account? <Link color="#56a8f5">Sign In</Link>
+          Already have an account?{" "}
+          <Link as={RouterLink} to="/sign-in" color="#56a8f5">
+            Sign In
+          </Link>
         </p>
       </Box>
     </>

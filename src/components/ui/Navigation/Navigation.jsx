@@ -1,4 +1,5 @@
 import { Box, Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Navigation({ children }) {
   const [lessThan570] = useMediaQuery("(max-width: 570px)");
@@ -14,7 +15,7 @@ export default function Navigation({ children }) {
     >
       <header>
         <Flex align="center" alignContent="center">
-          <Link>
+          <Link as={RouterLink} to="/">
             {lessThan570 ? (
               <Image
                 src="/logo.svg"

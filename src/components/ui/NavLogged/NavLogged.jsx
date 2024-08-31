@@ -1,5 +1,6 @@
 import { Avatar, Button, Flex, Link, useMediaQuery } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 
 import { signOut } from "../../../store/slicers/userSlice";
 
@@ -15,10 +16,12 @@ export default function NavLogged() {
 
   return (
     <Flex alignItems="center">
-      <Button type="button" colorScheme="green" variant="solid" mr="10px">
-        Create article
-      </Button>
-      <Link _hover={{ textDecorationLine: "none" }}>
+      <Link as={RouterLink} to="/new-article">
+        <Button type="button" colorScheme="green" variant="solid" mr="10px">
+          Create article
+        </Button>
+      </Link>
+      <Link as={RouterLink} to="/profile" _hover={{ textDecorationLine: "none" }}>
         <Flex alignItems="center">
           {lessThan500 ? null : (
             <span

@@ -54,7 +54,11 @@ export default function ArticleMinimized({
           >
             {title}
           </h2>
-          <Box minWidth="141px" ml="auto">
+          <Box
+            minWidth="141px"
+            ml="auto"
+            transform={isLargerThan888 ? "" : "translate(55px)"}
+          >
             <Flex>
               <Flex flexDirection="column" mr="12px">
                 <p style={{ fontSize: "18px", fontWeight: "bold", whiteSpace: "nowrap" }}>

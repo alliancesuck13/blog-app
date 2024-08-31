@@ -20,6 +20,13 @@ const userSlice = createSlice({
       state.loggedIn = true;
     },
 
+    updateUserData(state, action) {
+      state.token = action.payload.updatedToken;
+      state.username = action.payload.updatedUsername || state.username;
+      state.email = action.payload.updatedEmail || state.email;
+      state.image = action.payload.updatedImage || action.image;
+    },
+
     signOut(state, action) {
       state.loggedIn = false;
       state.token = "token.is.here";
@@ -30,5 +37,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { loadUserData, signOut } = userSlice.actions;
+export const { loadUserData, signOut, updateUserData } = userSlice.actions;
 export default userSlice.reducer;

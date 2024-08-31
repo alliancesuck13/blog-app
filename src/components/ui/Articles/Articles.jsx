@@ -19,6 +19,7 @@ import generateUniqueID from "../../../utils/generateUniqueID";
 import ArticlesService from "./services/ArticlesService";
 
 export default function Articles() {
+  document.title = "Kitt's blog";
   const [isLoaded, setIsLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);

@@ -14,12 +14,15 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 import { loadUserData } from "../../../store/slicers/userSlice";
 
 import SignInService from "./services/SignInService";
 
 export default function SignIn() {
+  document.title = "Sign In";
+
   const { register, handleSubmit, formState } = useForm();
   const dispatch = useDispatch();
   const [invalidPasswordOrEmail, setInvalidPasswordOrEmail] = useState(false);
@@ -53,6 +56,7 @@ export default function SignIn() {
             username: response.user.username,
             email: response.user.email,
             token: response.user.token,
+            image: response.user.image,
           })
         );
 
@@ -77,7 +81,7 @@ export default function SignIn() {
       <Box
         ml="auto"
         mr="auto"
-        transform="translateY(8%)"
+        transform="translateY(24%)"
         p="48px 32px"
         maxW="384px"
         backgroundColor="#fff"
@@ -150,7 +154,10 @@ export default function SignIn() {
           </FormControl>
         </form>
         <p>
-          Don&apos;t have an account? <Link color="#56a8f5">Sign Up</Link>
+          Don&apos;t have an account?{" "}
+          <Link as={RouterLink} to="/sign-up" color="#56a8f5">
+            Sign Up
+          </Link>
         </p>
       </Box>
     </>
