@@ -1,5 +1,7 @@
-import { Avatar, Box, useMediaQuery, Flex, Tag } from "@chakra-ui/react";
+import { Avatar, Box, useMediaQuery, Flex, Tag, Link } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import "./ArticleMinimized.css";
 import generateUniqueID from "../../../utils/generateUniqueID";
@@ -11,7 +13,9 @@ export default function ArticleMinimized({
   tagList,
   favoritesCount,
   author,
+  slug,
 }) {
+  const { username } = useSelector((state) => state.user);
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const avatar = isLargerThan888 ? (
     <Avatar name={author.username} src={author.image} />
@@ -45,15 +49,24 @@ export default function ArticleMinimized({
         position="relative"
       >
         <Flex>
-          <h2
-            style={{
-              fontSize: "20px",
-              color: "#1890FF",
-              maxWidth: "655px",
-            }}
+          <Link
+            as={RouterLink}
+            to={
+              author.username === username
+                ? `/articles/${username}/${slug}`
+                : `/articles/${slug}`
+            }
           >
-            {title}
-          </h2>
+            <h2
+              style={{
+                fontSize: "20px",
+                color: "#1890FF",
+                maxWidth: "655px",
+              }}
+            >
+              {title}
+            </h2>
+          </Link>
           <Box
             minWidth="141px"
             ml="auto"

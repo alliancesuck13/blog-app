@@ -8,10 +8,12 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { updateUserData } from "../../../store/slicers/userSlice";
 
@@ -21,7 +23,7 @@ export default function EditProfile() {
   const [isUsernameOrEmailTaken, setIsUsernameOrEmailTaken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, reset } = useForm({
     mode: "onChange",
   });
 
@@ -29,7 +31,22 @@ export default function EditProfile() {
     return state.user;
   });
 
+  document.title = `Edit profile ${user.username}`;
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    !user.loggedIn ? navigate("/") : navigate("/profile");
+
+    reset({
+      username: user.username,
+      email: user.email,
+      image: user.image,
+    });
+  }, [navigate, user.loggedIn, reset, user.email, user.image, user.username]);
+
+  const toaster = useToast();
 
   const usernameError = formState.errors.username?.message;
   const emailError = formState.errors.email?.message;
@@ -47,8 +64,21 @@ export default function EditProfile() {
     service
       .editProfile(body, user.token)
       .then((response) => {
-        setIsLoading(false);
+        if (response.message === "422") {
+          setIsUsernameOrEmailTaken(true);
+          setIsLoading(false);
 
+          return null;
+        }
+
+        toaster({
+          title: "Success!",
+          status: "success",
+          isClosable: true,
+        });
+
+        setIsLoading(false);
+        setIsUsernameOrEmailTaken(false);
         dispatch(
           updateUserData({
             updatedToken: response.user.token,
@@ -58,11 +88,15 @@ export default function EditProfile() {
           })
         );
 
-        console.log(response);
+        return response;
       })
       .catch((reason) => {
         setIsLoading(false);
-        console.log(reason);
+        toaster({
+          title: `${reason}`,
+          status: "error",
+          isClosable: true,
+        });
       });
   };
 
@@ -94,6 +128,7 @@ export default function EditProfile() {
             type="text"
             placeholder="New username"
             {...register("username", {
+              required: "The username is required",
               pattern: {
                 value: /^[a-zA-Z0-9]{3,20}$/,
                 message: "New username must be valid",
@@ -115,6 +150,7 @@ export default function EditProfile() {
             type="email"
             placeholder="New email"
             {...register("email", {
+              required: "The email is required",
               pattern: {
                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "New email must be valid",

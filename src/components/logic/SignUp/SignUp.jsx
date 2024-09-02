@@ -10,11 +10,13 @@ import {
   FormLabel,
   Input,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import SignUpService from "./services/SignUpService";
 
@@ -25,9 +27,11 @@ export default function SignUp() {
   });
 
   const [isUsernameOrEmailTaken, setIsUsernameOrEmailTaken] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const service = new SignUpService();
   const usernameError = formState.errors.username?.message;
@@ -35,6 +39,10 @@ export default function SignUp() {
   const passwordError = formState.errors.password?.message;
   const passwordRepeatError = formState.errors.passwordRepeat?.message;
   const checkbox = formState.errors.checkbox?.message;
+
+  useEffect(() => {
+    user.loggedIn ? navigate("/") : navigate("/sign-up");
+  }, [navigate, user.loggedIn]);
 
   const password = watch("password");
 
@@ -53,16 +61,22 @@ export default function SignUp() {
       .then((response) => {
         if (response.message === "422") {
           setIsUsernameOrEmailTaken(true);
-          setIsSuccess(false);
           setIsLoading(false);
           return null;
         }
 
         setIsUsernameOrEmailTaken(false);
-        setIsSuccess(true);
         setIsLoading(false);
+        toast({
+          title:
+            "You're just registred! You will be redirected to sign-in page in 4 seconds",
+          status: "success",
+          isClosable: true,
+        });
 
-        setTimeout(() => setIsSuccess(false), 4000);
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 4000);
 
         return response;
       })
@@ -74,20 +88,17 @@ export default function SignUp() {
 
   return (
     <>
-      {isSuccess || isError ? (
-        <Alert status={"success" || "error"} transform="translateY(-15px)">
+      {isError ? (
+        <Alert status="error" transform="translateY(-15px)">
           <AlertIcon />
-          <AlertDescription>
-            {"Good news! You are signed up!" ||
-              "Something did wrong. Try to reload the page"}
-          </AlertDescription>
+          <AlertDescription>Something did wrong. Try to reload the page</AlertDescription>
           {window.scrollTo({ top: 0, behavior: "smooth" })}
         </Alert>
       ) : null}
       <Box
         ml="auto"
         mr="auto"
-        transform="translateY(12%)"
+        transform="translateY(90px)"
         p="48px 32px"
         maxW="384px"
         backgroundColor="#fff"

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from "markdown-to-jsx";
+import { useParams } from "react-router-dom";
 
 import generateUniqueID from "../../../utils/generateUniqueID";
 import { loadArticle } from "../../../store/slicers/articleSlice";
@@ -33,16 +34,18 @@ export default function Article() {
     return state.article.article;
   });
 
+  const { slug } = useParams();
+
   useEffect(() => {
     const service = new ArticleService();
     service
-      .getArticle("markdown-primer-7ultpo")
+      .getArticle(`${slug}`)
       .then((response) => {
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
       })
       .catch(() => setGotError(true));
-  }, []);
+  }, [slug, dispatch]);
 
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const avatar = isLargerThan888 ? (
@@ -75,6 +78,7 @@ export default function Article() {
         boxShadow="0 4px 12px 0 #00000026"
         borderRadius="5px"
         position="relative"
+        transform="translateY(100px)"
       >
         {isLoading ? (
           <Flex>

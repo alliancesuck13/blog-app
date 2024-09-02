@@ -12,9 +12,9 @@ import {
   Input,
   Link,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { loadUserData } from "../../../store/slicers/userSlice";
 
@@ -28,9 +28,16 @@ export default function SignIn() {
   const [invalidPasswordOrEmail, setInvalidPasswordOrEmail] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const emailError = formState.errors.email?.message;
   const passwordError = formState.errors.password?.message;
+
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    user.loggedIn ? navigate("/") : navigate("/sign-in");
+  }, [navigate, user.loggedIn]);
 
   const service = new SignInService();
   const onSubmit = (data) => {
@@ -50,6 +57,7 @@ export default function SignIn() {
         setInvalidPasswordOrEmail(false);
         setError(false);
         setIsLoading(false);
+        navigate("/");
 
         dispatch(
           loadUserData({
@@ -81,7 +89,7 @@ export default function SignIn() {
       <Box
         ml="auto"
         mr="auto"
-        transform="translateY(24%)"
+        transform="translateY(100px)"
         p="48px 32px"
         maxW="384px"
         backgroundColor="#fff"

@@ -57,6 +57,7 @@ export default function Articles() {
         tagList={article.tagList}
         favoritesCount={article.favoritesCount}
         author={article.author}
+        slug={article.slug}
       />
     );
   });
@@ -74,7 +75,7 @@ export default function Articles() {
   };
 
   return (
-    <Box mt={20}>
+    <Box mt="100px">
       {didWrong ? (
         <Alert status="error">
           <AlertIcon />
