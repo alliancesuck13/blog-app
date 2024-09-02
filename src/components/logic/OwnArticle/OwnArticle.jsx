@@ -23,6 +23,7 @@ import {
   Tag,
   useDisclosure,
   useMediaQuery,
+  useToast,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -37,26 +38,38 @@ import OwnArticleService from "./services/OwnArticleService";
 
 export default function OwnArticle() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [gotError, setGotError] = useState(false);
 
   const dispatch = useDispatch();
-  const { slugid, article } = useSelector((state) => {
+  const { article } = useSelector((state) => {
     return state.article;
   });
 
+  document.title = article.title;
+
+  const { token, username, loggedIn } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
+
   const { slug } = useParams();
 
+  const toaster = useToast();
+
+  const service = new OwnArticleService();
   useEffect(() => {
-    const service = new OwnArticleService();
     service
       .getArticle(`${slug}`)
       .then((response) => {
+        username === response.article.author.username && loggedIn
+          ? navigate(`/articles/${username}/${slug}`)
+          : navigate(`/articles/${slug}`);
+
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
       })
       .catch(() => setGotError(true));
-  }, [slug, dispatch]);
+  }, [slug, dispatch, loggedIn, navigate, username]);
 
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const [lessThan496] = useMediaQuery("(max-width: 496px)");
@@ -64,6 +77,32 @@ export default function OwnArticle() {
   const avatar = isLargerThan888 ? (
     <Avatar name={article.author.username} src={article.author.image} />
   ) : null;
+
+  const deleteArticle = () => {
+    setIsDeleteLoading(true);
+
+    service
+      .deleteArticle(slug, token)
+      .then((response) => {
+        toaster({
+          title: "Article was successfuly deleted",
+          status: "success",
+          isClosable: true,
+        });
+
+        navigate("/");
+
+        setIsDeleteLoading(false);
+      })
+      .catch((reason) => {
+        toaster({
+          title: "Something goes wrong.",
+          status: "error",
+          isClosable: true,
+        });
+        setIsDeleteLoading(false);
+      });
+  };
 
   const tags = article.tagList.map((tag) => (
     <Tag
@@ -175,7 +214,7 @@ export default function OwnArticle() {
               className="button"
               style={{ position: "absolute", top: "70px", right: "16px" }}
             >
-              <span style={{ fontSize: "12px" }}>12</span>
+              <span style={{ fontSize: "12px" }}>{article.favoritesCount}</span>
             </button>
             <Flex position="absolute" top="110px" right="16px">
               <Popover
@@ -209,7 +248,13 @@ export default function OwnArticle() {
                       <Button variant="outline" onClick={onClose}>
                         Cancel
                       </Button>
-                      <Button colorScheme="red">Apply</Button>
+                      <Button
+                        colorScheme="red"
+                        onClick={deleteArticle}
+                        isLoading={isDeleteLoading}
+                      >
+                        Apply
+                      </Button>
                     </ButtonGroup>
                   </PopoverFooter>
                 </PopoverContent>
@@ -217,7 +262,7 @@ export default function OwnArticle() {
               <Button
                 colorScheme="green"
                 type="button"
-                onClick={() => navigate(`/articles/${slugid}/edit`)}
+                onClick={() => navigate(`/articles/${article.slug}/edit`)}
               >
                 Edit
               </Button>

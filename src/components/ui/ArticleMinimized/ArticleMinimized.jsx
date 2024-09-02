@@ -1,6 +1,6 @@
-import { Avatar, Box, useMediaQuery, Flex, Tag, Link } from "@chakra-ui/react";
+import { Avatar, Box, useMediaQuery, Flex, Tag, Link, useToast } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import "./ArticleMinimized.css";
@@ -15,11 +15,18 @@ export default function ArticleMinimized({
   author,
   slug,
 }) {
-  const { username } = useSelector((state) => state.user);
+  const { username, loggedIn } = useSelector((state) => state.user);
+
+  const toast = useToast();
+
+  const navigate = useNavigate();
+
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
+
   const avatar = isLargerThan888 ? (
     <Avatar name={author.username} src={author.image} />
   ) : null;
+
   const tags = tagList.map((tag) => (
     <Tag
       key={generateUniqueID()}
@@ -32,6 +39,17 @@ export default function ArticleMinimized({
       {tag}
     </Tag>
   ));
+
+  const like = () => {
+    if (!loggedIn) {
+      setTimeout(() => navigate("/sign-in"), 1000);
+      toast({
+        title: "You're not logged in. Redirecting in 1 second...",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <article>
@@ -67,11 +85,7 @@ export default function ArticleMinimized({
               {title}
             </h2>
           </Link>
-          <Box
-            minWidth="141px"
-            ml="auto"
-            transform={isLargerThan888 ? "" : "translate(55px)"}
-          >
+          <Box ml="auto">
             <Flex>
               <Flex flexDirection="column" mr="12px">
                 <p style={{ fontSize: "18px", fontWeight: "bold", whiteSpace: "nowrap" }}>
@@ -93,6 +107,7 @@ export default function ArticleMinimized({
           type="button"
           className="button"
           style={{ position: "absolute", bottom: "15px", right: "16px" }}
+          onClick={like}
         >
           <span style={{ fontSize: "12px" }}>{favoritesCount}</span>
         </button>

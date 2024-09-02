@@ -1,18 +1,24 @@
-export default class OwnArticleService {
+export default class LikeService {
   API_BASE_URL = "https://blog.kata.academy/api";
 
-  getResource = async (url = "") => {
+  postResource = async (url = "", token = "") => {
     const options = {
-      method: "GET",
+      method: "POST",
       headers: {
         accept: "application/json",
+        "Content-Type": "application/json;charset=utf-8",
+        Authorization: `Bearer ${token}`,
       },
     };
 
     const result = await fetch(`${this.API_BASE_URL}${url}`, options);
 
+    if (result.status === 422) {
+      throw new Error("422");
+    }
+
     if (!result.ok) {
-      throw new Error(`Could not fetch ${url}, received ${result.status}`);
+      throw new Error(`Could not post ${url}, received ${result.status}`);
     }
 
     const response = await result.json();
@@ -39,16 +45,20 @@ export default class OwnArticleService {
     if (!result.ok) {
       throw new Error(`Could not post ${url}, received ${result.status}`);
     }
+
+    const response = await result.json();
+
+    return response;
   };
 
-  getArticle(slug = "") {
-    return this.getResource(`/articles/${slug}`)
+  like(slug = "", token = "") {
+    return this.postResource(`/articles/${slug}/favorite`, token)
       .then((response) => response)
       .catch((reason) => reason);
   }
 
-  deleteArticle(slug = "", token = "") {
-    return this.deleteResource(`/articles/${slug}`, token)
+  unlike(slug = "", token = "") {
+    return this.deleteResource(`/articles/${slug}/favorite`, token)
       .then((response) => response)
       .catch((reason) => reason);
   }

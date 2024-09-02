@@ -38,7 +38,7 @@ export default function CreateArticle() {
   const service = new CreateArticleService();
 
   useEffect(() => {
-    !user.loggedIn ? navigate("/") : navigate("/new-article");
+    !user.loggedIn ? navigate("/sign-in") : navigate("/new-article");
   }, [navigate, user.loggedIn]);
 
   const titleError = formState.errors.title?.message;

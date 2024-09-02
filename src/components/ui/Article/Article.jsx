@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from "markdown-to-jsx";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import generateUniqueID from "../../../utils/generateUniqueID";
 import { loadArticle } from "../../../store/slicers/articleSlice";
@@ -29,10 +29,16 @@ export default function Article() {
   const [isLoading, setIsLoading] = useState(true);
   const [gotError, setGotError] = useState(false);
 
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const article = useSelector((state) => {
     return state.article.article;
   });
+
+  document.title = article.title;
+
+  const { username, loggedIn } = useSelector((state) => state.user);
 
   const { slug } = useParams();
 
@@ -41,11 +47,15 @@ export default function Article() {
     service
       .getArticle(`${slug}`)
       .then((response) => {
+        username === response.article.author.username && loggedIn
+          ? navigate(`/articles/${username}/${slug}`)
+          : navigate(`/articles/${slug}`);
+
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
       })
       .catch(() => setGotError(true));
-  }, [slug, dispatch]);
+  }, [slug, dispatch, loggedIn, navigate, username]);
 
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const avatar = isLargerThan888 ? (
