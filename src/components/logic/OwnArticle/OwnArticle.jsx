@@ -33,6 +33,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { loadArticle } from "../../../store/slicers/articleSlice";
 import generateUniqueID from "../../../utils/generateUniqueID";
+import LikeService from "../../../services/LikeService";
+import {
+  likeArticle,
+  removeArticle,
+  unlikeArticle,
+} from "../../../store/slicers/articlesSlice";
 
 import OwnArticleService from "./services/OwnArticleService";
 
@@ -40,36 +46,92 @@ export default function OwnArticle() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [gotError, setGotError] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   const dispatch = useDispatch();
-  const { article } = useSelector((state) => {
-    return state.article;
-  });
-
-  document.title = article.title;
+  const { article } = useSelector((state) => state.article);
 
   const { token, username, loggedIn } = useSelector((state) => state.user);
-
   const navigate = useNavigate();
-
   const { slug } = useParams();
-
   const toaster = useToast();
 
   const service = new OwnArticleService();
   useEffect(() => {
     service
-      .getArticle(`${slug}`)
+      .getArticle(`${slug}`, token)
       .then((response) => {
-        username === response.article.author.username && loggedIn
-          ? navigate(`/articles/${username}/${slug}`)
-          : navigate(`/articles/${slug}`);
-
+        if (username === response.article.author.username && loggedIn) {
+          navigate(`/articles/${username}/${slug}`);
+        }
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
+
+        // Устанавливаем начальные значения для лайков
+        setLiked(response.article.favorited);
+        setLikes(response.article.favoritesCount);
       })
       .catch(() => setGotError(true));
-  }, [slug, dispatch, loggedIn, navigate, username]);
+  }, [slug, dispatch, loggedIn, navigate, username, token]);
+
+  const likeService = new LikeService();
+
+  const like = () => {
+    if (!loggedIn) {
+      setTimeout(() => navigate("/sign-in"), 1000);
+      toaster({
+        title: "You're not logged in. Redirecting in 1 second...",
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (liked) {
+      likeService
+        .unlike(article.slug, token)
+        .then((response) => {
+          setLikes(response.article.favoritesCount);
+          setLiked(false);
+          dispatch(unlikeArticle({ slug }));
+        })
+        .catch((reason) => reason);
+    } else {
+      likeService
+        .like(article.slug, token)
+        .then((response) => {
+          setLikes(response.article.favoritesCount);
+          setLiked(true);
+          dispatch(likeArticle({ slug }));
+        })
+        .catch((reason) => reason);
+    }
+  };
+
+  const deleteArticle = () => {
+    setIsDeleteLoading(true);
+    service
+      .deleteArticle(slug, token)
+      .then(() => {
+        toaster({
+          title: "Article was successfully deleted",
+          status: "success",
+          isClosable: true,
+        });
+        dispatch(removeArticle({ slug }));
+        navigate("/");
+        setIsDeleteLoading(false);
+      })
+      .catch(() => {
+        toaster({
+          title: "Something went wrong.",
+          status: "error",
+          isClosable: true,
+        });
+        setIsDeleteLoading(false);
+      });
+  };
 
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const [lessThan496] = useMediaQuery("(max-width: 496px)");
@@ -77,32 +139,6 @@ export default function OwnArticle() {
   const avatar = isLargerThan888 ? (
     <Avatar name={article.author.username} src={article.author.image} />
   ) : null;
-
-  const deleteArticle = () => {
-    setIsDeleteLoading(true);
-
-    service
-      .deleteArticle(slug, token)
-      .then((response) => {
-        toaster({
-          title: "Article was successfuly deleted",
-          status: "success",
-          isClosable: true,
-        });
-
-        navigate("/");
-
-        setIsDeleteLoading(false);
-      })
-      .catch((reason) => {
-        toaster({
-          title: "Something goes wrong.",
-          status: "error",
-          isClosable: true,
-        });
-        setIsDeleteLoading(false);
-      });
-  };
 
   const tags = article.tagList.map((tag) => (
     <Tag
@@ -211,10 +247,11 @@ export default function OwnArticle() {
             </Box>
             <button
               type="button"
-              className="button"
+              className={liked ? "button--liked" : "button--unliked"}
               style={{ position: "absolute", top: "70px", right: "16px" }}
+              onClick={like}
             >
-              <span style={{ fontSize: "12px" }}>{article.favoritesCount}</span>
+              <span style={{ fontSize: "12px" }}>{likes}</span>
             </button>
             <Flex position="absolute" top="110px" right="16px">
               <Popover

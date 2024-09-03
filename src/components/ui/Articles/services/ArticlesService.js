@@ -1,11 +1,12 @@
 export default class ArticlesService {
   API_BASE_URL = "https://blog.kata.academy/api";
 
-  getResource = async (url = "") => {
+  getResource = async (url = "", token = "") => {
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -20,14 +21,14 @@ export default class ArticlesService {
     return response;
   };
 
-  getArticles() {
-    return this.getResource("/articles")
+  getArticles(token = "") {
+    return this.getResource("/articles", token)
       .then((response) => response)
       .catch((reason) => reason);
   }
 
-  changePage(page) {
-    return this.getResource(`/articles?offset=${page}`)
+  changePage(page, token = "") {
+    return this.getResource(`/articles?offset=${page}`, token)
       .then((response) => response)
       .catch((reason) => reason);
   }

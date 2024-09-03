@@ -1,21 +1,36 @@
 import { Avatar, Box, useMediaQuery, Flex, Tag, Link, useToast } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import "./ArticleMinimized.css";
 import generateUniqueID from "../../../utils/generateUniqueID";
+import LikeService from "../../../services/LikeService";
+import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
 
 export default function ArticleMinimized({
   title,
   description,
   createdAt,
   tagList,
+  favorited,
   favoritesCount,
   author,
   slug,
 }) {
-  const { username, loggedIn } = useSelector((state) => state.user);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
+
+  const { token, username, loggedIn } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    favorited ? setLiked(true) : setLiked(false);
+    !loggedIn && setLiked(false);
+
+    setLikes(favoritesCount);
+  }, [favorited, favoritesCount, loggedIn]);
 
   const toast = useToast();
 
@@ -41,6 +56,7 @@ export default function ArticleMinimized({
   ));
 
   const like = () => {
+    const service = new LikeService();
     if (!loggedIn) {
       setTimeout(() => navigate("/sign-in"), 1000);
       toast({
@@ -48,6 +64,28 @@ export default function ArticleMinimized({
         status: "error",
         isClosable: true,
       });
+    }
+
+    if (liked) {
+      service
+        .unlike(slug, token)
+        .then((response) => {
+          setLikes(likes - 1);
+          setLiked(false);
+          dispatch(unlikeArticle({ slug: response.article.slug }));
+        })
+        .catch((reason) => reason);
+    }
+
+    if (!liked) {
+      service
+        .like(slug, token)
+        .then((response) => {
+          setLikes(likes + 1);
+          setLiked(true);
+          dispatch(likeArticle({ slug: response.article.slug }));
+        })
+        .catch((reason) => reason);
     }
   };
 
@@ -105,11 +143,11 @@ export default function ArticleMinimized({
         </Box>
         <button
           type="button"
-          className="button"
+          className={liked ? "button--liked" : "button--unliked"}
           style={{ position: "absolute", bottom: "15px", right: "16px" }}
           onClick={like}
         >
-          <span style={{ fontSize: "12px" }}>{favoritesCount}</span>
+          <span style={{ fontSize: "12px" }}>{likes}</span>
         </button>
       </Box>
     </article>

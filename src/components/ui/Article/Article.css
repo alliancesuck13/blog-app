@@ -1,4 +1,4 @@
-.button::before {
+.button--unliked::before {
   content: url("/unliked.svg");
   position: absolute;
   right: 15px;
@@ -6,8 +6,16 @@
   width: 20px;
 }
 
-.button:hover::before {
+.button--unliked:hover::before {
   content: url("/liked.svg");
+}
+
+.button--liked::before {
+  content: url("/liked.svg");
+  position: absolute;
+  right: 15px;
+  top: 4px;
+  width: 20px;
 }
 
 /* Стили внутри .Box */

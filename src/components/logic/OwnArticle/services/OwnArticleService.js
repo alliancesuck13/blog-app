@@ -1,11 +1,12 @@
 export default class OwnArticleService {
   API_BASE_URL = "https://blog.kata.academy/api";
 
-  getResource = async (url = "") => {
+  getResource = async (url = "", token = "") => {
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     };
 
@@ -41,8 +42,8 @@ export default class OwnArticleService {
     }
   };
 
-  getArticle(slug = "") {
-    return this.getResource(`/articles/${slug}`)
+  getArticle(slug = "", token = "") {
+    return this.getResource(`/articles/${slug}`, token)
       .then((response) => response)
       .catch((reason) => reason);
   }

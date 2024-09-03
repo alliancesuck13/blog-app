@@ -68,15 +68,14 @@ export default function SignUp() {
         setIsUsernameOrEmailTaken(false);
         setIsLoading(false);
         toast({
-          title:
-            "You're just registred! You will be redirected to sign-in page in 4 seconds",
+          title: "You're just registred! You will be redirected to sign-in page",
           status: "success",
           isClosable: true,
         });
 
         setTimeout(() => {
           navigate("/sign-in");
-        }, 4000);
+        }, 1000);
 
         return response;
       })

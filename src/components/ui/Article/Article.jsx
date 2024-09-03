@@ -11,6 +11,7 @@ import {
   Spinner,
   Tag,
   useMediaQuery,
+  useToast,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -21,31 +22,38 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import generateUniqueID from "../../../utils/generateUniqueID";
 import { loadArticle } from "../../../store/slicers/articleSlice";
-
+import LikeService from "../../../services/LikeService";
+import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
 import "./Article.css";
+
 import ArticleService from "./services/ArticleService";
 
 export default function Article() {
+  const article = useSelector((state) => {
+    return state.article.article;
+  });
+  document.title = article.title;
+
   const [isLoading, setIsLoading] = useState(true);
   const [gotError, setGotError] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const article = useSelector((state) => {
-    return state.article.article;
-  });
 
-  document.title = article.title;
-
-  const { username, loggedIn } = useSelector((state) => state.user);
+  const { token, username, loggedIn } = useSelector((state) => state.user);
 
   const { slug } = useParams();
 
+  const toast = useToast();
+
   useEffect(() => {
     const service = new ArticleService();
+
     service
-      .getArticle(`${slug}`)
+      .getArticle(`${slug}`, token)
       .then((response) => {
         username === response.article.author.username && loggedIn
           ? navigate(`/articles/${username}/${slug}`)
@@ -53,9 +61,47 @@ export default function Article() {
 
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
+        if (!isLoading) {
+          article.favorited ? setLiked(true) : setLiked(false);
+          setLikes(article.favoritesCount);
+        }
       })
       .catch(() => setGotError(true));
-  }, [slug, dispatch, loggedIn, navigate, username]);
+  }, [article.favorited, article.favoritesCount, isLoading]);
+
+  const like = () => {
+    const service = new LikeService();
+    if (!loggedIn) {
+      setTimeout(() => navigate("/sign-in"), 1000);
+      toast({
+        title: "You're not logged in. Redirecting in 1 second...",
+        status: "error",
+        isClosable: true,
+      });
+    }
+
+    if (liked) {
+      service
+        .unlike(article.slug, token)
+        .then((response) => {
+          setLikes(response.article.favoritesCount);
+          setLiked(false);
+          dispatch(unlikeArticle({ slug }));
+        })
+        .catch((reason) => reason);
+    }
+
+    if (!liked) {
+      service
+        .like(article.slug, token)
+        .then((response) => {
+          setLikes(response.article.favoritesCount);
+          setLiked(true);
+          dispatch(likeArticle({ slug }));
+        })
+        .catch((reason) => reason);
+    }
+  };
 
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
   const avatar = isLargerThan888 ? (
@@ -169,10 +215,11 @@ export default function Article() {
             </Box>
             <button
               type="button"
-              className="button"
+              className={liked ? "button--liked" : "button--unliked"}
               style={{ position: "absolute", top: "70px", right: "27px" }}
+              onClick={like}
             >
-              <span style={{ fontSize: "12px" }}>{article.favoritesCount}</span>
+              <span style={{ fontSize: "12px" }}>{likes}</span>
             </button>
           </>
         )}

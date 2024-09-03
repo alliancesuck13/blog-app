@@ -20,6 +20,7 @@ import ArticlesService from "./services/ArticlesService";
 
 export default function Articles() {
   document.title = "Kitt's blog";
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,11 +32,13 @@ export default function Articles() {
     return state.articles.articles;
   });
 
+  const { token } = useSelector((state) => state.user);
+
   const service = new ArticlesService();
 
   useEffect(() => {
     service
-      .getArticles()
+      .getArticles(token)
       .then((response) => {
         dispatch(loadArticles({ articles: response.articles }));
         setIsLoaded(true);
@@ -45,7 +48,7 @@ export default function Articles() {
         setIsLoaded(true);
         setDidWrong(true);
       });
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   const articlesMinimized = articles.map((article) => {
     return (
@@ -55,6 +58,7 @@ export default function Articles() {
         description={article.description}
         createdAt={article.createdAt}
         tagList={article.tagList}
+        favorited={article.favorited}
         favoritesCount={article.favoritesCount}
         author={article.author}
         slug={article.slug}
@@ -66,7 +70,7 @@ export default function Articles() {
     setIsLoaded(false);
     setCurrentPage(page);
     service
-      .changePage(page)
+      .changePage(page, token)
       .then((response) => {
         dispatch(changePage({ newArticles: response.articles }));
         setIsLoaded(true);

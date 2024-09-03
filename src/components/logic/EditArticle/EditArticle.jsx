@@ -14,10 +14,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import generateUniqueID from "../../../utils/generateUniqueID";
+import { updateArticle } from "../../../store/slicers/articlesSlice";
 
 import EditArticleService from "./services/EditArticleService";
 
@@ -28,6 +29,7 @@ export default function EditArticle() {
 
   const user = useSelector((state) => state.user);
   const { article } = useSelector((state) => state.article);
+  const dispatch = useDispatch();
 
   document.title = `Edit ${article.title}`;
 
@@ -79,6 +81,8 @@ export default function EditArticle() {
           status: "success",
           isClosable: true,
         });
+
+        dispatch(updateArticle({ article: response.article }));
 
         setTimeout(
           () => navigate(`/articles/${user.username}/${response.article.slug}`),

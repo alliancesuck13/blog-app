@@ -14,10 +14,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import generateUniqueID from "../../../utils/generateUniqueID";
+import { createArticle } from "../../../store/slicers/articlesSlice";
 
 import CreateArticleService from "./service/CreateArticleService";
 
@@ -33,6 +34,7 @@ export default function CreateArticle() {
   });
 
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
   const service = new CreateArticleService();
@@ -65,6 +67,8 @@ export default function CreateArticle() {
           status: "success",
           isClosable: true,
         });
+
+        dispatch(createArticle({ article: response.article }));
 
         setTimeout(
           () => navigate(`/articles/${user.username}/${response.article.slug}`),
