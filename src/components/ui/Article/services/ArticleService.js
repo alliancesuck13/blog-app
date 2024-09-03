@@ -12,6 +12,10 @@ export default class ArticleService {
 
     const result = await fetch(`${this.API_BASE_URL}${url}`, options);
 
+    if (result.status === 404) {
+      throw new Error("404");
+    }
+
     if (!result.ok) {
       throw new Error(`Could not fetch ${url}, received ${result.status}`);
     }

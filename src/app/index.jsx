@@ -12,6 +12,7 @@ import OwnArticle from "../components/logic/OwnArticle/OwnArticle";
 import Navigation from "../components/ui/Navigation";
 import NavLogged from "../components/ui/NavLogged";
 import NavUnlogged from "../components/ui/NavUnlogged";
+import Error404 from "../components/ui/Error404/Error404";
 
 export default function App() {
   const { username, loggedIn } = useSelector((state) => {
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<EditProfile />} />
         <Route path="*" element={<Articles />} />
+        <Route path="/error-404" element={<Error404 />} />
       </Routes>
       <Navigation>{loggedIn ? <NavLogged /> : <NavUnlogged />}</Navigation>
     </>

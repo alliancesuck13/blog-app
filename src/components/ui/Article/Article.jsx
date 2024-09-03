@@ -55,6 +55,11 @@ export default function Article() {
     service
       .getArticle(`${slug}`, token)
       .then((response) => {
+        if (response.message === "404") {
+          setIsLoading(false);
+          navigate("/error-404");
+        }
+
         username === response.article.author.username && loggedIn
           ? navigate(`/articles/${username}/${slug}`)
           : navigate(`/articles/${slug}`);

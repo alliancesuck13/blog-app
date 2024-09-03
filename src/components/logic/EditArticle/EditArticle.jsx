@@ -43,7 +43,7 @@ export default function EditArticle() {
   const service = new EditArticleService();
 
   useEffect(() => {
-    article.author.username === user.username
+    article.author.username === user.username && user.loggedIn
       ? navigate(`/articles/${slug}/edit`)
       : navigate(`/articles/${slug}`);
 

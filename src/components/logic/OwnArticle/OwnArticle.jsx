@@ -62,13 +62,17 @@ export default function OwnArticle() {
     service
       .getArticle(`${slug}`, token)
       .then((response) => {
+        if (response.message === "404") {
+          setIsLoading(false);
+          navigate("/error-404");
+        }
+
         if (username === response.article.author.username && loggedIn) {
           navigate(`/articles/${username}/${slug}`);
         }
         dispatch(loadArticle({ article: response.article }));
         setIsLoading(false);
 
-        // Устанавливаем начальные значения для лайков
         setLiked(response.article.favorited);
         setLikes(response.article.favoritesCount);
       })
