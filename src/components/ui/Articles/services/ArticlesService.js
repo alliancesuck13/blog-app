@@ -28,7 +28,7 @@ export default class ArticlesService {
   }
 
   changePage(page, token = "") {
-    return this.getResource(`/articles?offset=${page}`, token)
+    return this.getResource(`/articles?offset=${page * 10}`, token)
       .then((response) => response)
       .catch((reason) => reason);
   }

@@ -95,7 +95,7 @@ export default function Articles() {
           <Pagination
             current={currentPage}
             pageSize={20}
-            total={totalPages * 20 - 20}
+            total={totalPages * 2}
             align="center"
             showSizeChanger={false}
             style={{ marginBottom: "16px" }}
