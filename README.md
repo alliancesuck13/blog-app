@@ -1,7 +1,7 @@
 <h1 align="center"><a href="https://kitt-blogapp.vercel.app/">Blog App 🏠</a></h1>
 
 <h2 align="center">
-  <p>Blog App приложение, написанное на React + Redux toolkit + Chakra UI</p>
+  <p>Blog App приложение, написанное на React + Redux toolkit + React Routes</p>
 </h2>
 
 <h1><p>Технологии и библиотеки:</p></h1>
@@ -14,6 +14,9 @@
   </li>
   <li>
     <h3><a href="https://v2.chakra-ui.com/">Chakra UI</a></h3>
+  </li>
+  <li>
+    <h3><a href="https://reactrouter.com/en/main">React Routes</a></h3>
   </li>
   <li>
     <h3><a href="https://markdown-to-jsx.quantizor.dev/">Markdown To JSX</a></h3>
