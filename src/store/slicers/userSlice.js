@@ -18,13 +18,13 @@ const userSlice = createSlice({
       state.token = action.payload.token;
       state.username = action.payload.username;
       state.email = action.payload.email;
-      state.image = action.payload.image;
+      state.image = action.payload.image || null;
       state.loggedIn = true;
 
       localStorage.setItem("token", JSON.stringify(action.payload.token));
       localStorage.setItem("username", JSON.stringify(action.payload.username));
       localStorage.setItem("email", JSON.stringify(action.payload.email));
-      localStorage.setItem("image", JSON.stringify(action.payload.image));
+      localStorage.setItem("image", JSON.stringify(action.payload.image || null));
       localStorage.setItem("loggedIn", JSON.stringify(true));
     },
 

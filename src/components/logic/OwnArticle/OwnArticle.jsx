@@ -39,6 +39,7 @@ import {
   removeArticle,
   unlikeArticle,
 } from "../../../store/slicers/articlesSlice";
+import cutTag from "../../../utils/cutTag";
 
 import OwnArticleService from "./services/OwnArticleService";
 
@@ -153,7 +154,7 @@ export default function OwnArticle() {
       border="1px solid black"
       borderRadius="3px"
     >
-      {tag}
+      {cutTag(tag)}
     </Tag>
   ));
 

@@ -16,7 +16,6 @@ import {
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from "markdown-to-jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -25,6 +24,7 @@ import { loadArticle } from "../../../store/slicers/articleSlice";
 import LikeService from "../../../services/LikeService";
 import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
 import "./Article.css";
+import cutTag from "../../../utils/cutTag";
 
 import ArticleService from "./services/ArticleService";
 
@@ -122,7 +122,7 @@ export default function Article() {
       border="1px solid black"
       borderRadius="3px"
     >
-      {tag}
+      {cutTag(tag)}
     </Tag>
   ));
 

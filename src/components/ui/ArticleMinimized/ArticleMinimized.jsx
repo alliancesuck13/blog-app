@@ -8,6 +8,7 @@ import "./ArticleMinimized.css";
 import generateUniqueID from "../../../utils/generateUniqueID";
 import LikeService from "../../../services/LikeService";
 import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
+import cutTag from "../../../utils/cutTag";
 
 export default function ArticleMinimized({
   title,
@@ -30,7 +31,7 @@ export default function ArticleMinimized({
     !loggedIn && setLiked(false);
 
     setLikes(favoritesCount);
-  }, [favorited, favoritesCount, loggedIn]);
+  }, []);
 
   const toast = useToast();
 
@@ -51,7 +52,7 @@ export default function ArticleMinimized({
       border="1px solid black"
       borderRadius="3px"
     >
-      {tag}
+      {cutTag(tag)}
     </Tag>
   ));
 
@@ -64,24 +65,23 @@ export default function ArticleMinimized({
         status: "error",
         isClosable: true,
       });
+      return;
     }
 
     if (liked) {
       service
         .unlike(slug, token)
         .then((response) => {
-          setLikes(likes - 1);
+          setLikes((prevLikes) => prevLikes - 1);
           setLiked(false);
           dispatch(unlikeArticle({ slug: response.article.slug }));
         })
         .catch((reason) => reason);
-    }
-
-    if (!liked) {
+    } else {
       service
         .like(slug, token)
         .then((response) => {
-          setLikes(likes + 1);
+          setLikes((prevLikes) => prevLikes + 1);
           setLiked(true);
           dispatch(likeArticle({ slug: response.article.slug }));
         })

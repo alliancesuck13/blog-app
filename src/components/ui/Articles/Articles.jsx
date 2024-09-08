@@ -14,7 +14,6 @@ import { Pagination } from "antd";
 
 import ArticleMinimized from "../ArticleMinimized";
 import { changePage, loadArticles } from "../../../store/slicers/articlesSlice";
-import generateUniqueID from "../../../utils/generateUniqueID";
 
 import ArticlesService from "./services/ArticlesService";
 
@@ -48,12 +47,12 @@ export default function Articles() {
         setIsLoaded(true);
         setDidWrong(true);
       });
-  }, [dispatch, token]);
+  }, []);
 
   const articlesMinimized = articles.map((article) => {
     return (
       <ArticleMinimized
-        key={generateUniqueID()}
+        key={article.slug}
         title={article.title}
         description={article.description}
         createdAt={article.createdAt}

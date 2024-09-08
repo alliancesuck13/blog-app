@@ -16,7 +16,9 @@ import {
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { loadUserData } from "../../../store/slicers/userSlice";
 
 import SignUpService from "./services/SignUpService";
 
@@ -30,6 +32,7 @@ export default function SignUp() {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -68,13 +71,21 @@ export default function SignUp() {
         setIsUsernameOrEmailTaken(false);
         setIsLoading(false);
         toast({
-          title: "You're just registred! You will be redirected to sign-in page",
+          title: "You're successfuly registred! You will be redirected in 1 second...",
           status: "success",
           isClosable: true,
         });
 
+        dispatch(
+          loadUserData({
+            username: response.user.username,
+            email: response.user.email,
+            token: response.user.token,
+          })
+        );
+
         setTimeout(() => {
-          navigate("/sign-in");
+          navigate("/");
         }, 1000);
 
         return response;

@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import generateUniqueID from "../../../utils/generateUniqueID";
 import { createArticle } from "../../../store/slicers/articlesSlice";
 
 import CreateArticleService from "./service/CreateArticleService";
@@ -86,17 +85,13 @@ export default function CreateArticle() {
 
   const addTag = () => {
     if (!tagInputValue.match(/^(?!\s*$).+/)) return;
-    if (tagList.findIndex((value) => value === tagInputValue) !== -1) {
-      toast({
-        title: "You already added this tag",
-        status: "error",
-        isClosable: true,
-      });
-      setTagInputValue("");
-      return;
-    }
+
     setTagList([...tagList, tagInputValue]);
     setTagInputValue("");
+  };
+
+  const deleteTag = (indexToDelete) => {
+    setTagList(tagList.filter((_, index) => index !== indexToDelete));
   };
 
   const onInput = (e) => {
@@ -105,9 +100,10 @@ export default function CreateArticle() {
 
   const clearInput = () => setTagInputValue("");
 
-  const renderTagList = tagList.map((tag) => {
+  const renderTagList = tagList.map((tag, index) => {
     return (
-      <Flex mb="5px" key={generateUniqueID()}>
+      // eslint-disable-next-line react/no-array-index-key
+      <Flex mb="5px" key={index}>
         <Input
           maxWidth="300px"
           type="text"
@@ -120,7 +116,7 @@ export default function CreateArticle() {
           ml="17px"
           width="120px"
           type="button"
-          onClick={() => setTagList(tagList.filter((value) => value !== tag))}
+          onClick={() => deleteTag(index)}
         >
           Delete
         </Button>
