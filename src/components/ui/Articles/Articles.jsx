@@ -50,19 +50,7 @@ export default function Articles() {
   }, []);
 
   const articlesMinimized = articles.map((article) => {
-    return (
-      <ArticleMinimized
-        key={article.slug}
-        title={article.title}
-        description={article.description}
-        createdAt={article.createdAt}
-        tagList={article.tagList}
-        favorited={article.favorited}
-        favoritesCount={article.favoritesCount}
-        author={article.author}
-        slug={article.slug}
-      />
-    );
+    return <ArticleMinimized key={article.slug} article={article} />;
   });
 
   const onChangePage = (page) => {

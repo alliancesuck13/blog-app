@@ -10,16 +10,7 @@ import LikeService from "../../../services/LikeService";
 import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
 import cutTag from "../../../utils/cutTag";
 
-export default function ArticleMinimized({
-  title,
-  description,
-  createdAt,
-  tagList,
-  favorited,
-  favoritesCount,
-  author,
-  slug,
-}) {
+export default function ArticleMinimized({ article }) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
 
@@ -27,10 +18,10 @@ export default function ArticleMinimized({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    favorited ? setLiked(true) : setLiked(false);
+    article.favorited ? setLiked(true) : setLiked(false);
     !loggedIn && setLiked(false);
 
-    setLikes(favoritesCount);
+    setLikes(article.favoritesCount);
   }, []);
 
   const toast = useToast();
@@ -40,10 +31,10 @@ export default function ArticleMinimized({
   const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
 
   const avatar = isLargerThan888 ? (
-    <Avatar name={author.username} src={author.image} />
+    <Avatar name={article.author.username} src={article.author.image} />
   ) : null;
 
-  const tags = tagList.map((tag) => (
+  const tags = article.tagList.map((tag) => (
     <Tag
       key={generateUniqueID()}
       mr="5px"
@@ -70,7 +61,7 @@ export default function ArticleMinimized({
 
     if (liked) {
       service
-        .unlike(slug, token)
+        .unlike(article.slug, token)
         .then((response) => {
           setLikes((prevLikes) => prevLikes - 1);
           setLiked(false);
@@ -79,7 +70,7 @@ export default function ArticleMinimized({
         .catch((reason) => reason);
     } else {
       service
-        .like(slug, token)
+        .like(article.slug, token)
         .then((response) => {
           setLikes((prevLikes) => prevLikes + 1);
           setLiked(true);
@@ -108,9 +99,9 @@ export default function ArticleMinimized({
           <Link
             as={RouterLink}
             to={
-              author.username === username
-                ? `/articles/${username}/${slug}`
-                : `/articles/${slug}`
+              article.author.username === username
+                ? `/articles/${username}/${article.slug}`
+                : `/articles/${article.slug}`
             }
           >
             <h2
@@ -120,17 +111,17 @@ export default function ArticleMinimized({
                 maxWidth: "655px",
               }}
             >
-              {title}
+              {article.title}
             </h2>
           </Link>
           <Box ml="auto">
             <Flex>
               <Flex flexDirection="column" mr="12px">
                 <p style={{ fontSize: "18px", fontWeight: "bold", whiteSpace: "nowrap" }}>
-                  {author.username}
+                  {article.author.username}
                 </p>
                 <p style={{ fontSize: "12px", color: "#00000080", textAlign: "end" }}>
-                  {format(new Date(createdAt), "PP")}
+                  {format(new Date(article.createdAt), "PP")}
                 </p>
               </Flex>
               {avatar}
@@ -139,7 +130,7 @@ export default function ArticleMinimized({
         </Flex>
         <Box maxW="700px">
           {tags}
-          <p>{description}</p>
+          <p>{article.description}</p>
         </Box>
         <button
           type="button"

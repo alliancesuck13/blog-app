@@ -4,7 +4,7 @@ export default function cutTag(tag = "") {
     ? `${tag
         .split("")
         .filter((char, index) => {
-          return index <= 57 ? char : "";
+          return index <= 42 ? char : "";
         })
         .join("")}`
     : "";
