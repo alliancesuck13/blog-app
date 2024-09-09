@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LikeService from "../../../services/LikeService";
 import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
 import cutTag from "../../../utils/cutTag";
-import ArticleMinimized from "../../ui/ArticleMinimized/ArticleMinimized";
+import ArticleMinimized from "../../../components/ui/ArticleMinimized/ArticleMinimized";
 
 export default function ArticleMinimizedLayout({ article }) {
   const [liked, setLiked] = useState(false);

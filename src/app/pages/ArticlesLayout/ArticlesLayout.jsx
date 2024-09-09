@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { changePage, loadArticles } from "../../../store/slicers/articlesSlice";
 import ArticleMinimizedLayout from "../ArticleMinimizedLayout";
-import Articles from "../../ui/Articles/Articles";
+import Articles from "../../../components/ui/Articles/Articles";
 
 import ArticlesService from "./services/ArticlesService";
 

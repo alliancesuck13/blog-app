@@ -2,7 +2,7 @@ import { useMediaQuery } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { signOut } from "../../../store/slicers/userSlice";
-import NavLogged from "../../ui/NavLogged";
+import NavLogged from "../../../components/ui/NavLogged";
 
 export default function NavLoggedLayout() {
   const [lessThan500] = useMediaQuery("(max-width: 500px)");

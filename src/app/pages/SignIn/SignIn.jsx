@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from "react-hook-form";
 import {
   Alert,

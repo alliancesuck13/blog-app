@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Article from "../../ui/Article";
+import Article from "../../../components/ui/Article";
 import { loadArticle } from "../../../store/slicers/articleSlice";
 import LikeService from "../../../services/LikeService";
 import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";

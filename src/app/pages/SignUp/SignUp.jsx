@@ -12,7 +12,6 @@ import {
   Link,
   useToast,
 } from "@chakra-ui/react";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -71,7 +70,7 @@ export default function SignUp() {
         setIsUsernameOrEmailTaken(false);
         setIsLoading(false);
         toast({
-          title: "You're successfuly registred! You will be redirected in 1 second...",
+          title: "You're successfuly registred! You will be redirected to main page",
           status: "success",
           isClosable: true,
         });

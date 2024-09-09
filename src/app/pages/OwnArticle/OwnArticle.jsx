@@ -32,7 +32,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { loadArticle } from "../../../store/slicers/articleSlice";
-import generateUniqueID from "../../../utils/generateUniqueID";
 import LikeService from "../../../services/LikeService";
 import {
   likeArticle,
@@ -145,9 +144,10 @@ export default function OwnArticle() {
     <Avatar name={article.author.username} src={article.author.image} />
   ) : null;
 
-  const tags = article.tagList.map((tag) => (
+  const tags = article.tagList.map((tag, index) => (
     <Tag
-      key={generateUniqueID()}
+      // eslint-disable-next-line react/no-array-index-key
+      key={index}
       mr="5px"
       mb="5px"
       backgroundColor="transparent"
