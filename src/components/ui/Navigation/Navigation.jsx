@@ -1,9 +1,7 @@
-import { Box, Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, Image, Link } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
-export default function Navigation({ children }) {
-  const [lessThan570] = useMediaQuery("(max-width: 570px)");
-
+export default function Navigation({ lessThan570, children }) {
   return (
     <Box
       backgroundColor="#fff"

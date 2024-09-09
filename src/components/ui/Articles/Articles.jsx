@@ -8,63 +8,16 @@ import {
   Flex,
   Spinner,
 } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import { Pagination } from "antd";
 
-import ArticleMinimized from "../ArticleMinimized";
-import { changePage, loadArticles } from "../../../store/slicers/articlesSlice";
-
-import ArticlesService from "./services/ArticlesService";
-
-export default function Articles() {
-  document.title = "Kitt's blog";
-
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [didWrong, setDidWrong] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const articles = useSelector((state) => {
-    return state.articles.articles;
-  });
-
-  const { token } = useSelector((state) => state.user);
-
-  const service = new ArticlesService();
-
-  useEffect(() => {
-    service
-      .getArticles(token)
-      .then((response) => {
-        dispatch(loadArticles({ articles: response.articles }));
-        setIsLoaded(true);
-        setTotalPages(response.articlesCount);
-      })
-      .catch(() => {
-        setIsLoaded(true);
-        setDidWrong(true);
-      });
-  }, []);
-
-  const articlesMinimized = articles.map((article) => {
-    return <ArticleMinimized key={article.slug} article={article} />;
-  });
-
-  const onChangePage = (page) => {
-    setIsLoaded(false);
-    setCurrentPage(page);
-    service
-      .changePage(page, token)
-      .then((response) => {
-        dispatch(changePage({ newArticles: response.articles }));
-        setIsLoaded(true);
-      })
-      .catch(() => setDidWrong(true));
-  };
-
+export default function Articles({
+  isLoaded,
+  didWrong,
+  totalPages,
+  currentPage,
+  onChangePage,
+  articlesMinimized,
+}) {
   return (
     <Box mt="100px">
       {didWrong ? (

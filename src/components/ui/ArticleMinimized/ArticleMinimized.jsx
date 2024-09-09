@@ -1,85 +1,18 @@
-import { Avatar, Box, useMediaQuery, Flex, Tag, Link, useToast } from "@chakra-ui/react";
+import { Box, Flex, Link } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 import "./ArticleMinimized.css";
-import generateUniqueID from "../../../utils/generateUniqueID";
-import LikeService from "../../../services/LikeService";
-import { likeArticle, unlikeArticle } from "../../../store/slicers/articlesSlice";
-import cutTag from "../../../utils/cutTag";
 
-export default function ArticleMinimized({ article }) {
-  const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(0);
-
-  const { token, username, loggedIn } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    article.favorited ? setLiked(true) : setLiked(false);
-    !loggedIn && setLiked(false);
-
-    setLikes(article.favoritesCount);
-  }, []);
-
-  const toast = useToast();
-
-  const navigate = useNavigate();
-
-  const [isLargerThan888] = useMediaQuery("(min-width: 888px)");
-
-  const avatar = isLargerThan888 ? (
-    <Avatar name={article.author.username} src={article.author.image} />
-  ) : null;
-
-  const tags = article.tagList.map((tag) => (
-    <Tag
-      key={generateUniqueID()}
-      mr="5px"
-      mb="5px"
-      backgroundColor="transparent"
-      border="1px solid black"
-      borderRadius="3px"
-    >
-      {cutTag(tag)}
-    </Tag>
-  ));
-
-  const like = () => {
-    const service = new LikeService();
-    if (!loggedIn) {
-      setTimeout(() => navigate("/sign-in"), 1000);
-      toast({
-        title: "You're not logged in. Redirecting in 1 second...",
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (liked) {
-      service
-        .unlike(article.slug, token)
-        .then((response) => {
-          setLikes((prevLikes) => prevLikes - 1);
-          setLiked(false);
-          dispatch(unlikeArticle({ slug: response.article.slug }));
-        })
-        .catch((reason) => reason);
-    } else {
-      service
-        .like(article.slug, token)
-        .then((response) => {
-          setLikes((prevLikes) => prevLikes + 1);
-          setLiked(true);
-          dispatch(likeArticle({ slug: response.article.slug }));
-        })
-        .catch((reason) => reason);
-    }
-  };
-
+export default function ArticleMinimized({
+  article,
+  username,
+  liked,
+  likes,
+  like,
+  avatar,
+  tags,
+}) {
   return (
     <article>
       <Box

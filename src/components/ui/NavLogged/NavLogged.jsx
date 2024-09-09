@@ -1,19 +1,13 @@
-import { Avatar, Button, Flex, Link, useMediaQuery } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { Avatar, Button, Flex, Link } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { signOut } from "../../../store/slicers/userSlice";
-
-export default function NavLogged() {
-  const [lessThan500] = useMediaQuery("(max-width: 500px)");
-  const username = useSelector((state) => {
-    return state.user.username;
-  });
-  const userImage = useSelector((state) => {
-    return state.user.image;
-  });
-  const dispatch = useDispatch();
-
+export default function NavLogged({
+  lessThan500,
+  dispatch,
+  userImage,
+  username,
+  signOut,
+}) {
   return (
     <Flex alignItems="center">
       <Link as={RouterLink} to="/new-article">

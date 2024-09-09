@@ -6,35 +6,33 @@ import EditArticle from "../components/logic/EditArticle/EditArticle";
 import EditProfile from "../components/logic/EditProfile";
 import SignIn from "../components/logic/SignIn/SignIn";
 import SignUp from "../components/logic/SignUp";
-import Article from "../components/ui/Article/Article";
-import Articles from "../components/ui/Articles/Articles";
+import ArticleLayout from "../components/logic/ArticleLayout/ArticleLayout";
 import OwnArticle from "../components/logic/OwnArticle/OwnArticle";
-import Navigation from "../components/ui/Navigation";
-import NavLogged from "../components/ui/NavLogged";
-import NavUnlogged from "../components/ui/NavUnlogged";
+import ArticlesLayout from "../components/logic/ArticlesLayout/ArticlesLayout";
+import NavigationLayout from "../components/logic/NavigationLayout/NavigationLayout";
 import Error404 from "../components/ui/Error404/Error404";
 
 export default function App() {
-  const { username, loggedIn } = useSelector((state) => {
+  const { username } = useSelector((state) => {
     return state.user;
   });
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Articles />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/articles/:slug" element={<Article />} />
+        <Route path="/" element={<ArticlesLayout />} />
+        <Route path="/articles" element={<ArticlesLayout />} />
+        <Route path="/articles/:slug" element={<ArticleLayout />} />
         <Route path={`/articles/${username}/:slug`} element={<OwnArticle />} />
         <Route path="/articles/:slug/edit" element={<EditArticle />} />
         <Route path="/new-article" element={<CreateArticle />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<EditProfile />} />
-        <Route path="*" element={<Articles />} />
         <Route path="/error-404" element={<Error404 />} />
+        <Route path="*" element={<ArticlesLayout />} />
       </Routes>
-      <Navigation>{loggedIn ? <NavLogged /> : <NavUnlogged />}</Navigation>
+      <NavigationLayout />
     </>
   );
 }
