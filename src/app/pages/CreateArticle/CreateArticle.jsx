@@ -69,10 +69,7 @@ export default function CreateArticle() {
 
         dispatch(createArticle({ article: response.article }));
 
-        setTimeout(
-          () => navigate(`/articles/${user.username}/${response.article.slug}`),
-          1000
-        );
+        setTimeout(() => navigate(`/articles/${response.article.slug}`), 1000);
       })
       .catch((error) =>
         toast({

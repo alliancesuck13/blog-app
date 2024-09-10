@@ -16,8 +16,10 @@ import "./Article.css";
 
 export default function Article({
   isLoading,
-  gotError,
   isLargerThan888,
+  isUserAuthor,
+  deleteAndEditButtons,
+  gotError,
   avatar,
   tags,
   article,
@@ -125,6 +127,7 @@ export default function Article({
             >
               <span style={{ fontSize: "12px" }}>{likes}</span>
             </button>
+            {isUserAuthor && deleteAndEditButtons}
           </>
         )}
       </Box>

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { changePage, loadArticles } from "../../../store/slicers/articlesSlice";
-import ArticleMinimizedLayout from "../ArticleMinimizedLayout";
+import ArticleLayoutE from "../ArticleLayout";
 import Articles from "../../../components/ui/Articles/Articles";
 
 import ArticlesService from "./services/ArticlesService";
 
+// eslint-disable-next-line no-underscore-dangle
 export default function ArticlesLayout() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
@@ -37,17 +38,18 @@ export default function ArticlesLayout() {
         setIsLoaded(true);
         setDidWrong(true);
       });
-  }, []);
+  }, [dispatch, token]);
 
-  const articlesMinimized = articles.map((article) => {
-    return <ArticleMinimizedLayout key={article.slug} article={article} />;
+  const articleList = articles.map((article) => {
+    return <ArticleLayoutE key={article.slug} article={article} />;
   });
 
   const onChangePage = (page) => {
+    const changedPage = page === 1 ? 0 : page * 10;
     setIsLoaded(false);
     setCurrentPage(page);
     service
-      .changePage(page, token)
+      .changePage(changedPage, token)
       .then((response) => {
         dispatch(changePage({ newArticles: response.articles }));
         setIsLoaded(true);
@@ -61,7 +63,7 @@ export default function ArticlesLayout() {
       totalPages={totalPages}
       currentPage={currentPage}
       didWrong={didWrong}
-      articlesMinimized={articlesMinimized}
+      articles={articleList}
       onChangePage={onChangePage}
     />
   );

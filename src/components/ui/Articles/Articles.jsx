@@ -16,7 +16,7 @@ export default function Articles({
   totalPages,
   currentPage,
   onChangePage,
-  articlesMinimized,
+  articles,
 }) {
   return (
     <Box mt="100px">
@@ -31,7 +31,7 @@ export default function Articles({
       ) : null}
       {isLoaded ? (
         <>
-          {articlesMinimized}
+          {articles}
           <Pagination
             current={currentPage}
             pageSize={20}
